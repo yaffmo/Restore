@@ -1,12 +1,24 @@
 using API.Data;
+using API.Model;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.ModelBuilder;
+using Microsoft.OData.Edm;
+
+static IEdmModel GetEdmModel()
+{
+    ODataConventionModelBuilder builder = new();
+    builder.EntitySet<Product>("Products");
+    return builder.GetEdmModel();
+}
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddControllers().AddOData(opt => opt.Filter().Select().Expand().Count().AddRouteComponents(GetEdmModel()));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
