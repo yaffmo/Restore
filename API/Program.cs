@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.ModelBuilder;
 using Microsoft.OData.Edm;
+using Microsoft.AspNetCore.Identity;
 
 static IEdmModel GetEdmModel()
 {
@@ -20,14 +21,24 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddControllers().AddOData(opt =>
     opt.Filter()
-    .Select()
-    .Expand()
-    .Count()
-    .AddRouteComponents(GetEdmModel()));
+       .Select()
+       .Expand()
+       .Count()
+       .AddRouteComponents(GetEdmModel()));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddCors(opt => opt.AddPolicy("AllAllowed", x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+builder.Services.AddCors(opt =>
+    opt.AddPolicy("AllAllowed", x => x.AllowAnyOrigin()
+                                      .AllowAnyMethod()
+                                      .AllowAnyHeader()));
+
+builder.Services.AddIdentityCore<User>()
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<StoreContext>();
+builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
+
 builder.Services.AddDbContext<StoreContext>(opt =>
 {
     opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -41,16 +52,16 @@ var app = builder.Build();
 
 //Seed Data
 if (args.Length == 1 && args[0].ToLower() == "seeddata")
-    SeedData(app);
+    await SeedDataAsync(app);
 
-void SeedData(IHost app)
+async Task SeedDataAsync(IHost app)
 {
     var scopedFactory = app.Services.GetService<IServiceScopeFactory>();
 
     using (var scope = scopedFactory.CreateScope())
     {
         var service = scope.ServiceProvider.GetService<DbInitializer>();
-        service.Initialize();
+        await service.Initialize();
     }
 }
 

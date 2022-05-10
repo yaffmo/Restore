@@ -3,6 +3,7 @@ using System;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    partial class StoreContextModelSnapshot : ModelSnapshot
+    [Migration("20220509080542_identity")]
+    partial class identity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0-preview.2.22153.1");
@@ -111,38 +114,6 @@ namespace API.Data.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "2acd16a0-d99a-453c-8515-f10fd8e73980",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "c7f86c23-a0bf-439f-9731-03b051e17a15",
-                            Email = "admin@test.com",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEIKvPm/C2Wiqi7fL8kQpN9ITG7pCYf5TM3wzQZPeaHzcV3OfQuOpPsYGK6VKwwEivg==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "4c175a20-5aa0-4580-85fb-e6ffdd413314",
-                            TwoFactorEnabled = false,
-                            UserName = "admin"
-                        },
-                        new
-                        {
-                            Id = "d5f94269-ac03-4442-ad63-bb9101c75ab0",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "6cd189f3-701d-4970-9684-fe7a341db01b",
-                            Email = "user@test.com",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            NormalizedUserName = "MEMBER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGNJ3hVzx7yNP/GYScCIGkC4CaelCbZGXDlMT9zYrUjtptSyb6LM1WBEeVburpTdSw==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "e4f2fd2c-2d6d-4f6c-a700-578694b902fd",
-                            TwoFactorEnabled = false,
-                            UserName = "user"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -173,15 +144,15 @@ namespace API.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "45bd6e22-135c-4bea-b109-2d97366d9afe",
-                            ConcurrencyStamp = "250ecb96-6509-428e-9365-75a15408a6ce",
+                            Id = "fadea152-ccb5-42c7-aa6e-b5b2e08c6bd4",
+                            ConcurrencyStamp = "d95c3ed4-afeb-4f04-9a19-c2589d7b2e5a",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
-                            Id = "fa9f6713-90ae-48e0-8925-f7ea7eaed599",
-                            ConcurrencyStamp = "8699961a-bf85-4b83-8bed-9de5eb51f1c4",
+                            Id = "2428be8d-9def-4fcc-a625-accdeef0b635",
+                            ConcurrencyStamp = "9614b53f-5cb5-4c6e-859d-dd72f41ae136",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

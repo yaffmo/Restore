@@ -1,21 +1,53 @@
 using API.Model;
+using Microsoft.AspNetCore.Identity;
 
 namespace API.Data
 {
     public class DbInitializer
     {
-        StoreContext context;
-        public DbInitializer(StoreContext context)
+        private StoreContext _context;
+        private UserManager<User> _userManager;
+        public DbInitializer(StoreContext context, UserManager<User> userManager)
         {
-            this.context = context;
+            _userManager = userManager;
+            _context = context;
         }
 
-        public void Initialize()
+        // ;
+        // public DbInitializer(StoreContext context)
+        // {
+        //     this.context = context;
+        // }
+
+        public async Task Initialize()
         {
-            if (context.Products.Any()) return;
+            if (!_userManager.Users.Any())
+            {
+                var user = new User
+                {
+                    UserName = "mo",
+                    Email = "mo@test.com"
+                };
+
+                await _userManager.CreateAsync(user, "pa$$w0rd");
+                await _userManager.AddToRoleAsync(user, "Member");
+
+                var admin = new User
+                {
+                    UserName = "admin",
+                    Email = "admin@test.com"
+                };
+
+                await _userManager.CreateAsync(admin, "pa$$w0rd");
+                await _userManager.AddToRolesAsync(admin, new[] { "Member", "Admin" });
+
+
+            }
+
+            if (_context.Products.Any()) return;
             var products = new List<Product>
             {
-               		new Product
+                       new Product
                 {
                     Name = "Angular Speedster Board 2000",
                     Description =
@@ -216,10 +248,10 @@ namespace API.Data
 
             foreach (var product in products)
             {
-                context.Products.Add(product);
+                _context.Products.Add(product);
             }
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
     }
 }
